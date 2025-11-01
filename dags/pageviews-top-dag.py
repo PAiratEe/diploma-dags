@@ -51,7 +51,7 @@ spark_submit = KubernetesPodOperator(
     get_logs=True,
     is_delete_operator_pod=True,
     in_cluster=True,
-    pull_policy="Always",
+    image_pull_policy="Always",
     dag=dag,
 )
 
