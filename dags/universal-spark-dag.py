@@ -1,29 +1,27 @@
+from airflow import DAG
 from airflow.providers.cncf.kubernetes.operators.pod import KubernetesPodOperator
 from datetime import timedelta, datetime
 
 
-class SparkJobBuilder:
+def build_spark_dag(path_name: str, table_name: str, schedule: str = "0 17 * * *"):
 
-    def __init__(self, path_name:str, table_name: str):
-        self.table_name = table_name
-        super().__init__(
-            dag_id=f"spark_job_{table_name}",
-            default_args={
-                "owner": "airflow",
-                "depends_on_past": False,
-                "start_date": datetime.now() - timedelta(days=1),
-                "retries": 1,
-                "execution_timeout": timedelta(hours=2),
-            },
-            schedule="0 15 * * *",
-            catchup=False,
-            tags=["spark", table_name],
-        )
+    dag = DAG(
+        dag_id=f"spark_job_{table_name}",
+        default_args={
+            "owner": "airflow",
+            "depends_on_past": False,
+            "start_date": datetime.now() - timedelta(days=1),
+            "retries": 1,
+            "execution_timeout": timedelta(hours=2),
+        },
+        schedule_interval=schedule,
+        catchup=False,
+        tags=["spark", table_name],
+    )
 
-    def build(self, dag):
-
+    with dag:
         KubernetesPodOperator(
-            task_id=f"spark_submit_{self.table_name}",
+            task_id=f"spark_submit_{table_name}",
             namespace="default",
             image="pairate/spark-job:latest",
             cmds=["/opt/spark/bin/spark-submit"],
@@ -43,14 +41,14 @@ class SparkJobBuilder:
                 "--conf", "spark.kubernetes.driverEnv.YEAR={{ ds.split('-')[0] }}",
                 "--conf", "spark.kubernetes.driverEnv.MONTH={{ ds.split('-')[1] }}",
                 "--conf", "spark.kubernetes.driverEnv.DAY={{ ds.split('-')[2] }}",
-                "--conf", "spark.kubernetes.driverEnv.PATH={self.path_name}",
-                "--conf", "spark.kubernetes.driverEnv.TABLE={self.table_name}",
-                "/opt/spark/work-dir/SparkJob-1.0-SNAPSHOT.jar"
+                f"--conf=spark.kubernetes.driverEnv.PATH={path_name}",
+                f"--conf=spark.kubernetes.driverEnv.TABLE={table_name}",
+                "/opt/spark/work-dir/SparkJob-1.0-SNAPSHOT.jar",
             ],
-            name=f"spark-job-{self.table_name}",
+            name=f"spark-job-{table_name}",
             get_logs=True,
             in_cluster=True,
             is_delete_operator_pod=True,
-            dag=dag,
         )
-        return dag
+
+    return dag
