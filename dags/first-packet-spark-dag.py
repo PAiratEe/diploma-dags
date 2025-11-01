@@ -23,7 +23,7 @@ dag = DAG(
 
 spark_submit = KubernetesPodOperator(
     namespace='default',
-    image='pairate/spark-job:latest',
+    image='pairate/spark-job:0.0.1',
     cmds=["/opt/spark/bin/spark-submit"],
     arguments=[
         "--master", "k8s://https://192.168.49.2:8443",
@@ -38,9 +38,9 @@ spark_submit = KubernetesPodOperator(
         "--conf", "spark.hadoop.fs.s3a.access.key=minio",
         "--conf", "spark.hadoop.fs.s3a.secret.key=minio123",
         "--conf", "spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem",
-        "--conf", "spark.kubernetes.driverEnv.YEAR={{ ds.split('-')[0] }}",
-        "--conf", "spark.kubernetes.driverEnv.MONTH={{ ds.split('-')[1] }}",
-        "--conf", "spark.kubernetes.driverEnv.DAY={{ ds.split('-')[2] }}",
+        "--conf", "spark.kubernetes.driverEnv.YEAR={{ execution_date.strftime('%Y') }}",
+        "--conf", "spark.kubernetes.driverEnv.MONTH={{ execution_date.strftime('%m') }}",
+        "--conf", "spark.kubernetes.driverEnv.DAY={{ execution_date.strftime('%d') }}",
         "/opt/spark/work-dir/SparkJob-1.0-SNAPSHOT.jar"
     ],
     name="spark-job",
