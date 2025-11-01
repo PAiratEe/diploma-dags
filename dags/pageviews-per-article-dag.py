@@ -33,6 +33,7 @@ spark_submit = KubernetesPodOperator(
         "--conf", "spark.dynamicAllocation.enabled=false",
         "--conf", "spark.executor.instances=2",
         "--conf", "spark.kubernetes.container.image=pairate/spark-job:0.0.4",
+        "--conf", "spark.kubernetes.container.image.pullPolicy=Always",
         "--conf", "spark.hadoop.fs.s3a.endpoint=http://airbyte-minio-svc:9000",
         "--conf", "spark.hadoop.fs.s3a.path.style.access=true",
         "--conf", "spark.hadoop.fs.s3a.access.key=minio",
