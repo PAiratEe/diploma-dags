@@ -15,7 +15,7 @@ default_args = {
 }
 
 dag = DAG(
-    'pageviews-top-spark-job',
+    'gnews-search-spark-job',
     default_args=default_args,
     schedule='0 17 * * *',
     catchup=False,
