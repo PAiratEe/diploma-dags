@@ -23,7 +23,7 @@ dag = DAG(
 
 spark_submit = KubernetesPodOperator(
     namespace='default',
-    image='pairate/spark-job:latest',
+    image='pairate/spark-job:0.0.2',
     cmds=["/opt/spark/bin/spark-submit"],
     arguments=[
         "--master", "k8s://https://192.168.49.2:8443",
