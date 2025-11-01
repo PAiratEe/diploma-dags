@@ -40,7 +40,7 @@ spark_submit = KubernetesPodOperator(
         "--conf", "spark.hadoop.fs.s3a.impl=org.apache.hadoop.fs.s3a.S3AFileSystem",
         "--conf", "spark.kubernetes.driverEnv.YEAR={{ ds.split('-')[0] }}",
         "--conf", "spark.kubernetes.driverEnv.MONTH={{ ds.split('-')[1] }}",
-        "--conf", "spark.kubernetes.driverEnv.DAY={{ ds.split('-')[2]|zfill(2) }}",
+        "--conf", "spark.kubernetes.driverEnv.DAY={{ ds.split('-')[2] }}",
         "--conf", "spark.kubernetes.driverEnv.PATH=wikipedia_pageviews/per-article",
         "--conf", "spark.kubernetes.driverEnv.TABLE=wikipedia_pageviews_per_article",
         "/opt/spark/work-dir/SparkJob-1.0-SNAPSHOT.jar"
