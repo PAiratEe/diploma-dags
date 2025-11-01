@@ -23,7 +23,7 @@ dag = DAG(
 
 spark_submit = KubernetesPodOperator(
     namespace='default',
-    image='pairate/spark-job:0.0.2',
+    image='pairate/spark-job:0.0.4',
     cmds=["/opt/spark/bin/spark-submit"],
     arguments=[
         "--master", "k8s://https://192.168.49.2:8443",
@@ -32,7 +32,7 @@ spark_submit = KubernetesPodOperator(
         "--conf", "spark.kubernetes.file.upload.path=s3a://airbyte-bucket/spark",
         "--conf", "spark.dynamicAllocation.enabled=false",
         "--conf", "spark.executor.instances=2",
-        "--conf", "spark.kubernetes.container.image=pairate/spark-job:0.0.2",
+        "--conf", "spark.kubernetes.container.image=pairate/spark-job:0.0.4",
         "--conf", "spark.hadoop.fs.s3a.endpoint=http://airbyte-minio-svc:9000",
         "--conf", "spark.hadoop.fs.s3a.path.style.access=true",
         "--conf", "spark.hadoop.fs.s3a.access.key=minio",
