@@ -41,7 +41,7 @@ spark_submit = KubernetesPodOperator(
         "--conf", "spark.kubernetes.driverEnv.YEAR={{ ds.split('-')[0] }}",
         "--conf", "spark.kubernetes.driverEnv.MONTH={{ ds.split('-')[1] }}",
         "--conf", "spark.kubernetes.driverEnv.DAY={{ ds.split('-')[2] }}",
-        "--conf", "spark.kubernetes.driverEnv.PATH=gnews/search",
+        "--conf", "spark.kubernetes.driverEnv.DATA_PATH=gnews/search",
         "--conf", "spark.kubernetes.driverEnv.TABLE=gnews_search",
         "/opt/spark/work-dir/SparkJob-1.0-SNAPSHOT.jar"
     ],
